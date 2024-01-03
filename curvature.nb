@@ -1,0 +1,860 @@
+(***********************************************************************
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used on any computer system with Mathematica 4.0,
+MathReader 4.0, or any compatible application. The data for the notebook 
+starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do one of 
+the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing the 
+word CacheID, otherwise Mathematica-compatible applications may try to 
+use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+***********************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     19986,        664]*)
+(*NotebookOutlinePosition[     20980,        696]*)
+(*  CellTagsIndexPosition[     20936,        692]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Curvature and the Einstein Equation", "Subtitle"],
+
+Cell[TextData[{
+  "This is the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " notebook ",
+  StyleBox["Curvature and the Einstein Equation ",
+    FontSlant->"Italic"],
+  StyleBox["available from the book website.  F",
+    FontVariations->{"CompatibilityType"->0}],
+  "rom a given metric ",
+  Cell[BoxData[
+      FormBox[
+        SubscriptBox[
+          StyleBox["g",
+            FontSlant->"Italic"], "\[Alpha]\[Beta]"], TraditionalForm]]],
+  " , it computes the components of the following: the inverse metric, ",
+  Cell[BoxData[
+      \(TraditionalForm\`g\^\[Lambda]\[Sigma]\)]],
+  ", the Christoffel symbols or affine connection,"
+}], "Text"],
+
+Cell[TextData[{
+  Cell[BoxData[
+      \(TraditionalForm\`\(\[CapitalGamma]\^\[Lambda]\)\_\[Mu]\[Nu] = \
+\(1\/2\) \(\(g\^\[Lambda]\[Sigma]\)(\[PartialD]\_\[Mu]\ 
+                g\_\[Sigma]\[Nu] + \[PartialD]\_\[Nu]\ 
+                g\_\[Sigma]\[Mu] - \[PartialD]\_\[Sigma]\ 
+                g\_\[Mu]\[Nu])\)\)]],
+  ","
+}], "Text"],
+
+Cell[TextData[{
+  " ( ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[PartialD]\_\(\(\[Alpha]\)\(\ \ \)\)\)]],
+  "stands for the partial derivative ",
+  Cell[BoxData[
+      \(TraditionalForm\`\[PartialD]\(\(/\)\(\[PartialD]x\^\[Alpha]\)\)\)]],
+  "), the Riemann tensor,"
+}], "Text"],
+
+Cell[TextData[{
+  Cell[BoxData[
+      \(TraditionalForm\`\(R\^\[Lambda]\)\_\[Mu]\[Nu]\[Sigma] = \[PartialD]\_\
+\[Nu]\ \(\[CapitalGamma]\^\[Lambda]\)\_\[Mu]\[Sigma] - \[PartialD]\_\[Sigma]\ \
+\(\[CapitalGamma]\^\[Lambda]\)\_\[Mu]\[Nu] + \(\(\[CapitalGamma]\^\[Eta]\)\_\
+\[Mu]\[Sigma]\) \(\[CapitalGamma]\^\[Lambda]\)\_\[Eta]\[Nu] - \(\(\
+\[CapitalGamma]\^\[Eta]\)\_\[Mu]\[Nu]\) \
+\(\[CapitalGamma]\^\[Lambda]\)\_\[Eta]\[Sigma]\)]],
+  ","
+}], "Text"],
+
+Cell["the Ricci tensor", "Text"],
+
+Cell[TextData[{
+  Cell[BoxData[
+      \(TraditionalForm\`R\_\[Mu]\[Nu] = \
+\(R\^\[Lambda]\)\_\[Mu]\[Lambda]\[Nu]\)]],
+  ","
+}], "Text"],
+
+Cell["the scalar curvature,", "Text"],
+
+Cell[TextData[{
+  Cell[BoxData[
+      \(TraditionalForm\`R = \(g\^\[Mu]\[Nu]\) R\_\[Mu]\[Nu]\)]],
+  ","
+}], "Text"],
+
+Cell["and the Einstein tensor,", "Text"],
+
+Cell[TextData[{
+  " ",
+  Cell[BoxData[
+      \(TraditionalForm\`G\_\[Mu]\[Nu] = 
+        R\_\[Mu]\[Nu] - \(1\/2\) \(g\_\[Mu]\[Nu]\) R\)]],
+  "."
+}], "Text"],
+
+Cell[TextData[{
+  "You must input the covariant components of the metric tensor ",
+  Cell[BoxData[
+      \(TraditionalForm\`g\_\[Mu]\[Nu]\)]],
+  " by editing the relevant input line in this ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " notebook. You may also wish to change the names of the coordinates. Only \
+the nonzero components of the above quantities are displayed as the output. \
+All the components computed are in the ",
+  StyleBox["coordinate basis ",
+    FontSlant->"Italic"],
+  StyleBox["in which the metric was specified. ",
+    FontVariations->{"CompatibilityType"->0}]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell["Clearing the values of symbols:", "Subsubsection"],
+
+Cell["\<\
+First clear any values that may already have been assigned to the \
+names of the various objects to be calculated. The names of the coordinates \
+that you will use are also cleared.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(Clear[coord, \ metric, inversemetric, \ affine, \ riemann, \ ricci, \ 
+      scalar, \ einstein, r, \[Theta], \[Phi], t]\)], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Setting the dimension:", "Subsubsection"],
+
+Cell[TextData[{
+  "The dimension ",
+  StyleBox["n ",
+    FontWeight->"Bold"],
+  StyleBox["of the spacetime (or space) must be set:",
+    FontVariations->{"CompatibilityType"->0}]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(n = 4\)], "Input"],
+
+Cell[BoxData[
+    \(4\)], "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Defining a list of coordinates:", "Subsubsection"],
+
+Cell["\<\
+The example given here is the Schwarzschild metric. The coordinate \
+choice of Schwarzschild is appropriate for this spherically symmetric \
+spacetime. \
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    StyleBox[\(coord\  = \ {r, \[Theta], \[Phi], t}\),
+      FontWeight->"Bold"]], "Input"],
+
+Cell[BoxData[
+    \({r, \[Theta], \[Phi], t}\)], "Output"]
+}, Open  ]],
+
+Cell[TextData[{
+  "You can change the names of the coordinates by simply editing the \
+definition of ",
+  StyleBox["coord",
+    FontWeight->"Bold"],
+  ", for example, to ",
+  StyleBox["coord = {x, y, z, t}",
+    FontWeight->"Bold"],
+  ", when another set of coordinate names is more appropriate. In this \
+program indices range over ",
+  StyleBox["1 ",
+    FontWeight->"Bold"],
+  StyleBox["to ",
+    FontVariations->{"CompatibilityType"->0}],
+  StyleBox["n.  ",
+    FontWeight->"Bold",
+    FontVariations->{"CompatibilityType"->0}],
+  StyleBox["Thus for spacetime they range from 1 to 4 and ",
+    FontVariations->{"CompatibilityType"->0}],
+  Cell[BoxData[
+      \(TraditionalForm\`x\^4\)]],
+  " is the same as ",
+  Cell[BoxData[
+      \(TraditionalForm\`x\^0\)]],
+  " used in the text. "
+}], "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Defining the metric:", "Subsubsection"],
+
+Cell["\<\
+Input the metric as a list of lists, i.e., as a matrix. You can \
+input the components of any metric here, but you must specify them as \
+explicit functions of the coordinates.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(metric = {{\((1 - 2\ m/r)\)^\((\(-1\))\), 0, 0, 0}, {0, r^2, 0, 0}, {0, 
+          0, r^2\ Sin[\[Theta]]^2, 0}, {0, 0, 
+          0, \(-\((1 - 2\ m/r)\)\)}}\)], "Input"],
+
+Cell[BoxData[
+    \({{1\/\(1 - \(2\ m\)\/r\), 0, 0, 0}, {0, r\^2, 0, 0}, {0, 0, 
+        r\^2\ Sin[\[Theta]]\^2, 0}, {0, 0, 
+        0, \(-1\) + \(2\ m\)\/r}}\)], "Output"]
+}, Open  ]],
+
+Cell["You can also display this in matrix form.", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(metric // MatrixForm\)], "Input"],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {\(1\/\(1 - \(2\ m\)\/r\)\), "0", "0", "0"},
+            {"0", \(r\^2\), "0", "0"},
+            {"0", "0", \(r\^2\ Sin[\[Theta]]\^2\), "0"},
+            {"0", "0", "0", \(\(-1\) + \(2\ m\)\/r\)}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Note:", "Subsubsection"],
+
+Cell[TextData[{
+  "It is important not to use the symbols, ",
+  StyleBox["i",
+    FontWeight->"Bold"],
+  ", ",
+  StyleBox["j",
+    FontWeight->"Bold"],
+  ", ",
+  StyleBox["k",
+    FontWeight->"Bold"],
+  ", ",
+  StyleBox["l,",
+    FontWeight->"Bold"],
+  StyleBox[" ",
+    FontVariations->{"CompatibilityType"->0}],
+  StyleBox["s, ",
+    FontWeight->"Bold",
+    FontVariations->{"CompatibilityType"->0}],
+  StyleBox["or ",
+    FontVariations->{"CompatibilityType"->0}],
+  StyleBox["n",
+    FontWeight->"Bold",
+    FontVariations->{"CompatibilityType"->0}],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  "as constants or coordinates in the metric that you specify above. The \
+reason is that the first five of  those symbols are used as summation or \
+table indices in the calculations done below, and ",
+  StyleBox["n ",
+    FontWeight->"Bold"],
+  StyleBox["is the dimension of the space. ",
+    FontVariations->{"CompatibilityType"->0}],
+  "For example, if ",
+  StyleBox["m",
+    FontWeight->"Bold"],
+  " were used as a summation or table index below, then you would get the \
+wrong answer for the present metric because the ",
+  StyleBox["m",
+    FontWeight->"Bold"],
+  " in the metric would be treated as an index, rather than as the mass."
+}], "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Calculating the inverse metric:", "Subsubsection"],
+
+Cell["The inverse metric is obtained through matrix inversion.", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(inversemetric = Simplify[Inverse[metric]]\)], "Input"],
+
+Cell[BoxData[
+    \({{1 - \(2\ m\)\/r, 0, 0, 0}, {0, 1\/r\^2, 0, 0}, {0, 0, 
+        Csc[\[Theta]]\^2\/r\^2, 0}, {0, 0, 0, r\/\(2\ m - r\)}}\)], "Output"]
+}, Open  ]],
+
+Cell["This can also be displayed in matrix form:", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(inversemetric // MatrixForm\)], "Input"],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {\(1 - \(2\ m\)\/r\), "0", "0", "0"},
+            {"0", \(1\/r\^2\), "0", "0"},
+            {"0", "0", \(Csc[\[Theta]]\^2\/r\^2\), "0"},
+            {"0", "0", "0", \(r\/\(2\ m - r\)\)}
+            }], "\[NoBreak]", ")"}],
+      (MatrixForm[ #]&)]], "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Calculating the Christoffel symbols:", "Subsubsection"],
+
+Cell[TextData[{
+  "The calculation of the components of the Christoffel symbols is done by \
+transcribing the definition given earlier into the notation of ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " and using the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " functions ",
+  StyleBox["D",
+    FontWeight->"Bold"],
+  " for taking partial derivatives, ",
+  StyleBox["Sum",
+    FontWeight->"Bold"],
+  " for summing over repeated indices, ",
+  StyleBox["Table",
+    FontWeight->"Bold"],
+  " for forming a list of components, and ",
+  StyleBox["Simplify",
+    FontWeight->"Bold"],
+  " for simplifying the result."
+}], "Text"],
+
+Cell[BoxData[
+    \(affine := \(affine = 
+        Simplify[
+          Table[\((1/2)\)*
+              Sum[\((inversemetric[\([i, s]\)])\)*\[IndentingNewLine]\((D[
+                        metric[\([s, j]\)], 
+                        coord[\([k]\)]\ ] + \[IndentingNewLine]D[
+                        metric[\([s, k]\)], coord[\([j]\)]\ ] - 
+                      D[metric[\([j, k]\)], coord[\([s]\)]\ ])\), {s, 1, 
+                  n}], \[IndentingNewLine]{i, 1, n}, {j, 1, n}, {k, 1, 
+              n}]\ ]\)\)], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Displaying the Christoffel symbols:", "Subsubsection"],
+
+Cell[TextData[{
+  "The nonzero Christoffel symbols are displayed below. You need not follow \
+the details of constructing the functions that we use for that purpose.  In \
+the output the symbol \[CapitalGamma][1,2,3] stands for",
+  StyleBox[" ",
+    FontSlant->"Italic"],
+  Cell[BoxData[
+      \(TraditionalForm\`\(\[CapitalGamma]\^1\)\_23\)]],
+  ". Because the Christoffel symbols are symmetric under interchange of the \
+last two indices, only the independent components are displayed."
+}], "Text"],
+
+Cell[BoxData[
+    \(listaffine := 
+      Table[If[UnsameQ[affine[\([i, j, k]\)], 
+            0], {ToString[\[CapitalGamma][i, j, k]], 
+            affine[\([i, j, k]\)]}]\ , {i, 1, n}, {j, 1, n}, {k, 1, 
+          j}]\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(TableForm[Partition[DeleteCases[Flatten[listaffine], Null], 2], 
+      TableSpacing \[Rule] {2, 2}]\)], "Input"],
+
+Cell[BoxData[
+    TagBox[GridBox[{
+          {"\<\"\[CapitalGamma][1, 1, 1]\"\>", \(m\/\(2\ m\ r - r\^2\)\)},
+          {"\<\"\[CapitalGamma][1, 2, 2]\"\>", \(2\ m - r\)},
+          {"\<\"\[CapitalGamma][1, 3, 3]\"\>", \(\((2\ m - 
+                  r)\)\ Sin[\[Theta]]\^2\)},
+          {"\<\"\[CapitalGamma][1, 4, 4]\"\>", \(\(m\ \((\(-2\)\ m + 
+                      r)\)\)\/r\^3\)},
+          {"\<\"\[CapitalGamma][2, 2, 1]\"\>", \(1\/r\)},
+          {"\<\"\[CapitalGamma][2, 3, 3]\"\>", \(\(-Cos[\[Theta]]\)\ Sin[\
+\[Theta]]\)},
+          {"\<\"\[CapitalGamma][3, 3, 1]\"\>", \(1\/r\)},
+          {"\<\"\[CapitalGamma][3, 3, 2]\"\>", \(Cot[\[Theta]]\)},
+          {"\<\"\[CapitalGamma][4, 4, 1]\"\>", \(m\/\(\(-2\)\ m\ r + 
+                  r\^2\)\)}
+          },
+        RowSpacings->2,
+        ColumnSpacings->2,
+        RowAlignments->Baseline,
+        ColumnAlignments->{Left}],
+      (TableForm[ #, TableSpacing -> {2, 2}]&)]], "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Calculating and displaying the Riemann tensor:", "Subsubsection"],
+
+Cell[TextData[{
+  "The components of the Riemann tensor, ",
+  Cell[BoxData[
+      \(TraditionalForm\`\(R\^\[Lambda]\)\_\[Mu]\[Nu]\[Sigma]\)]],
+  ", are calculated using the definition given above."
+}], "Text"],
+
+Cell[BoxData[
+    \(riemann := \(riemann = 
+        Simplify[
+          Table[\[IndentingNewLine]D[affine[\([i, j, l]\)], 
+                coord[\([k]\)]\ ] - 
+              D[affine[\([i, j, k]\)], 
+                coord[\([l]\)]\ ] + \[IndentingNewLine]Sum[
+                affine[\([s, j, l]\)]\ affine[\([i, k, s]\)] - 
+                  affine[\([s, j, k]\)]\ affine[\([i, l, 
+                        s]\)], \[IndentingNewLine]{s, 1, 
+                  n}], \[IndentingNewLine]{i, 1, n}, {j, 1, n}, {k, 1, 
+              n}, {l, 1, n}]\ ]\)\)], "Input"],
+
+Cell[TextData[{
+  "The nonzero components are displayed by the following functions. In the \
+output, the symbol R[1, 2, 1, 3] stands for ",
+  Cell[BoxData[
+      \(TraditionalForm\`\(R\^1\)\_213\)]],
+  ", and similarly for the other components.",
+  " You can obtain R[1, 2, 3, 1] from R[1, 2, 1, 3] using the antisymmetry of \
+the Riemann tensor under exchange of the last two indices. The antisymmetry \
+under exchange of the first two indices of ",
+  Cell[BoxData[
+      \(TraditionalForm\`R\_\[Lambda]\[Mu]\[Nu]\[Sigma]\)]],
+  " is not evident in the output because the components of ",
+  Cell[BoxData[
+      \(TraditionalForm\`\(R\^\[Lambda]\)\_\[Mu]\[Nu]\[Sigma]\)]],
+  " are displayed."
+}], "Text"],
+
+Cell[BoxData[
+    \(listriemann := 
+      Table[If[UnsameQ[riemann[\([i, j, k, l]\)], 
+            0], {ToString[R[i, j, k, l]], riemann[\([i, j, k, l]\)]}]\ , {i, 
+          1, n}, {j, 1, n}, {k, 1, n}, {l, 1, k - 1}]\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(TableForm[Partition[DeleteCases[Flatten[listriemann], Null], 2], 
+      TableSpacing \[Rule] {2, 2}]\)], "Input"],
+
+Cell[BoxData[
+    TagBox[GridBox[{
+          {"\<\"R[1, 2, 2, 1]\"\>", \(m\/r\)},
+          {"\<\"R[1, 3, 3, 1]\"\>", \(\(m\ Sin[\[Theta]]\^2\)\/r\)},
+          {"\<\"R[1, 4, 4, 1]\"\>", \(\(2\ m\ \((\(-2\)\ m + r)\)\)\/r\^4\)},
+          {"\<\"R[2, 1, 2, 1]\"\>", \(m\/\(\((2\ m - r)\)\ r\^2\)\)},
+          {"\<\"R[2, 3, 3, 2]\"\>", \(-\(\(2\ m\ Sin[\[Theta]]\^2\)\/r\)\)},
+          {"\<\"R[2, 4, 4, 2]\"\>", \(\(m\ \((2\ m - r)\)\)\/r\^4\)},
+          {"\<\"R[3, 1, 3, 1]\"\>", \(m\/\(\((2\ m - r)\)\ r\^2\)\)},
+          {"\<\"R[3, 2, 3, 2]\"\>", \(\(2\ m\)\/r\)},
+          {"\<\"R[3, 4, 4, 3]\"\>", \(\(m\ \((2\ m - r)\)\)\/r\^4\)},
+          {"\<\"R[4, 1, 4, 1]\"\>", \(\(2\ m\)\/\(r\^2\ \((\(-2\)\ m + 
+                      r)\)\)\)},
+          {"\<\"R[4, 2, 4, 2]\"\>", \(-\(m\/r\)\)},
+          {"\<\"R[4, 3, 4, 3]\"\>", \(-\(\(m\ Sin[\[Theta]]\^2\)\/r\)\)}
+          },
+        RowSpacings->2,
+        ColumnSpacings->2,
+        RowAlignments->Baseline,
+        ColumnAlignments->{Left}],
+      (TableForm[ #, TableSpacing -> {2, 2}]&)]], "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Calculating and displaying the Ricci tensor:", "Subsubsection"],
+
+Cell[TextData[{
+  "The Ricci tensor ",
+  Cell[BoxData[
+      \(TraditionalForm\`R\_\[Mu]\[Nu]\)]],
+  " was defined by summing the first and third indices of the Riemann tensor \
+(which has the first index already raised)."
+}], "Text"],
+
+Cell[BoxData[
+    \(ricci := \(ricci = 
+        Simplify[
+          Table[Sum[riemann[\([i, j, i, l]\)], {i, 1, n}], {j, 1, n}, {l, 1, 
+              n}]\ ]\)\)], "Input"],
+
+Cell[TextData[{
+  "Next we display the nonzero components. In the output, R[1, 2] denotes ",
+  Cell[BoxData[
+      \(TraditionalForm\`R\_12\)]],
+  ", and similarly for the other components."
+}], "Text"],
+
+Cell[BoxData[
+    \(listricci := 
+      Table[If[UnsameQ[ricci[\([j, l]\)], 0], {ToString[R[j, l]], 
+            ricci[\([j, l]\)]}]\ , {j, 1, n}, {l, 1, j}]\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(TableForm[Partition[DeleteCases[Flatten[listricci], Null], 2], 
+      TableSpacing \[Rule] {2, 2}]\)], "Input"],
+
+Cell[BoxData[
+    InterpretationBox[
+      InterpretationBox["\<\"\"\>",
+        {}],
+      TableForm[ {}, TableSpacing -> {2, 2}]]], "Output"]
+}, Open  ]],
+
+Cell["\<\
+A vanishing table (as with the Schwarzschild metric example)  means \
+that the vacuum Einstein equation is satisfied.\
+\>", "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Calculating the scalar curvature:", "Subsubsection"],
+
+Cell[TextData[{
+  "The scalar curvature ",
+  StyleBox["R",
+    FontSlant->"Italic"],
+  " is calculated using the inverse metric and the Ricci tensor. The result \
+is displayed in the output line."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(scalar = 
+      Simplify[Sum[
+          inversemetric[\([i, j]\)] ricci[\([i, j]\)], {i, 1, n}, {j, 1, 
+            n}]\ ]\)], "Input"],
+
+Cell[BoxData[
+    \(0\)], "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Calculating the Einstein tensor:", "Subsubsection"],
+
+Cell[TextData[{
+  "The Einstein tensor,  ",
+  Cell[BoxData[
+      \(TraditionalForm\`G\_\[Mu]\[Nu] = 
+        R\_\[Mu]\[Nu] - \(1\/2\) \(g\_\[Mu]\[Nu]\) R\)]],
+  ", is found from the tensors already calculated."
+}], "Text"],
+
+Cell[BoxData[
+    \(einstein := \(einstein = 
+        Simplify[ricci - \((1/2)\) scalar*metric]\)\)], "Input"],
+
+Cell["\<\
+The results are displayed in the same way as for the Ricci tensor \
+earlier.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(listeinstein := 
+      Table[If[UnsameQ[einstein[\([j, l]\)], 0], {ToString[G[j, l]], 
+            einstein[\([j, l]\)]}]\ , {j, 1, n}, {l, 1, j}]\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(TableForm[Partition[DeleteCases[Flatten[listeinstein], Null], 2], 
+      TableSpacing \[Rule] {2, 2}]\)], "Input"],
+
+Cell[BoxData[
+    InterpretationBox[
+      InterpretationBox["\<\"\"\>",
+        {}],
+      TableForm[ {}, TableSpacing -> {2, 2}]]], "Output"]
+}, Open  ]],
+
+Cell["\<\
+A vanishing table means that the vacuum Einstein equation is \
+satisfied!\
+\>", "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Acknowledgment", "Subsubsection"],
+
+Cell[TextData[{
+  "This program was kindly written by ",
+  StyleBox["Leonard Parker, University of Wisconsin, Milwaukee ",
+    FontSlant->"Italic"],
+  StyleBox["especially ",
+    FontVariations->{"CompatibilityType"->0}],
+  StyleBox[" ",
+    FontSlant->"Italic"],
+  StyleBox["for this text. ",
+    FontVariations->{"CompatibilityType"->0}]
+}], "Text"]
+}, Open  ]]
+}, Open  ]]
+},
+FrontEndVersion->"4.0 for X",
+ScreenRectangle->{{0, 1024}, {0, 768}},
+WindowToolbars->"EditBar",
+WindowSize->{770, 653},
+WindowMargins->{{Automatic, 103}, {38, Automatic}},
+PrintingPageRange->{Automatic, Automatic},
+PrintingOptions->{"PaperSize"->{612, 792},
+"PaperOrientation"->"Portrait",
+"PostScriptOutputFile":>FrontEnd`FileName[{$RootDirectory, "home", "hartle", \
+"131book", "math", "Curvature"}, "curvature-n.ps1", CharacterEncoding -> \
+"ISO8859-1"],
+"Magnification"->1},
+Magnification->1.5
+]
+
+
+(***********************************************************************
+Cached data follows.  If you edit this Notebook file directly, not using
+Mathematica, you must remove the line containing CacheID at the top of 
+the file.  The cache data will then be recreated when you save this file 
+from within Mathematica.
+***********************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1739, 51, 55, 0, 99, "Subtitle"],
+Cell[1797, 53, 656, 19, 98, "Text"],
+Cell[2456, 74, 331, 8, 52, "Text"],
+Cell[2790, 84, 280, 8, 46, "Text"],
+Cell[3073, 94, 448, 9, 46, "Text"],
+Cell[3524, 105, 32, 0, 46, "Text"],
+Cell[3559, 107, 135, 5, 46, "Text"],
+Cell[3697, 114, 37, 0, 46, "Text"],
+Cell[3737, 116, 115, 4, 46, "Text"],
+Cell[3855, 122, 40, 0, 46, "Text"],
+Cell[3898, 124, 156, 6, 52, "Text"],
+Cell[4057, 132, 609, 14, 121, "Text"],
+
+Cell[CellGroupData[{
+Cell[4691, 150, 56, 0, 60, "Subsubsection"],
+Cell[4750, 152, 205, 4, 71, "Text"],
+Cell[4958, 158, 153, 2, 62, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[5148, 165, 47, 0, 60, "Subsubsection"],
+Cell[5198, 167, 190, 6, 46, "Text"],
+
+Cell[CellGroupData[{
+Cell[5413, 177, 38, 1, 39, "Input"],
+Cell[5454, 180, 35, 1, 39, "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[5538, 187, 56, 0, 60, "Subsubsection"],
+Cell[5597, 189, 176, 4, 71, "Text"],
+
+Cell[CellGroupData[{
+Cell[5798, 197, 105, 2, 39, "Input"],
+Cell[5906, 201, 58, 1, 39, "Output"]
+}, Open  ]],
+Cell[5979, 205, 800, 25, 121, "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[6816, 235, 45, 0, 60, "Subsubsection"],
+Cell[6864, 237, 200, 4, 71, "Text"],
+
+Cell[CellGroupData[{
+Cell[7089, 245, 189, 3, 62, "Input"],
+Cell[7281, 250, 172, 3, 126, "Output"]
+}, Open  ]],
+Cell[7468, 256, 57, 0, 46, "Text"],
+
+Cell[CellGroupData[{
+Cell[7550, 260, 53, 1, 39, "Input"],
+Cell[7606, 263, 349, 8, 177, "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[8004, 277, 30, 0, 60, "Subsubsection"],
+Cell[8037, 279, 1250, 40, 171, "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[9324, 324, 56, 0, 60, "Subsubsection"],
+Cell[9383, 326, 72, 0, 46, "Text"],
+
+Cell[CellGroupData[{
+Cell[9480, 330, 74, 1, 39, "Input"],
+Cell[9557, 333, 154, 2, 115, "Output"]
+}, Open  ]],
+Cell[9726, 338, 58, 0, 46, "Text"],
+
+Cell[CellGroupData[{
+Cell[9809, 342, 60, 1, 39, "Input"],
+Cell[9872, 345, 340, 8, 187, "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[10261, 359, 61, 0, 60, "Subsubsection"],
+Cell[10325, 361, 648, 21, 121, "Text"],
+Cell[10976, 384, 519, 10, 223, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[11532, 399, 60, 0, 60, "Subsubsection"],
+Cell[11595, 401, 500, 10, 121, "Text"],
+Cell[12098, 413, 231, 5, 108, "Input"],
+
+Cell[CellGroupData[{
+Cell[12354, 422, 132, 2, 85, "Input"],
+Cell[12489, 426, 947, 20, 383, "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[13485, 452, 71, 0, 60, "Subsubsection"],
+Cell[13559, 454, 209, 5, 71, "Text"],
+Cell[13771, 461, 558, 11, 177, "Input"],
+Cell[14332, 474, 704, 15, 146, "Text"],
+Cell[15039, 491, 231, 4, 108, "Input"],
+
+Cell[CellGroupData[{
+Cell[15295, 499, 133, 2, 85, "Input"],
+Cell[15431, 503, 1061, 20, 595, "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[16541, 529, 69, 0, 60, "Subsubsection"],
+Cell[16613, 531, 234, 6, 71, "Text"],
+Cell[16850, 539, 171, 4, 108, "Input"],
+Cell[17024, 545, 202, 5, 71, "Text"],
+Cell[17229, 552, 170, 3, 85, "Input"],
+
+Cell[CellGroupData[{
+Cell[17424, 559, 131, 2, 85, "Input"],
+Cell[17558, 563, 143, 4, 58, "Output"]
+}, Open  ]],
+Cell[17716, 570, 141, 3, 71, "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[17894, 578, 58, 0, 60, "Subsubsection"],
+Cell[17955, 580, 208, 6, 71, "Text"],
+
+Cell[CellGroupData[{
+Cell[18188, 590, 155, 4, 85, "Input"],
+Cell[18346, 596, 35, 1, 39, "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[18430, 603, 57, 0, 60, "Subsubsection"],
+Cell[18490, 605, 223, 6, 52, "Text"],
+Cell[18716, 613, 110, 2, 39, "Input"],
+Cell[18829, 617, 100, 3, 46, "Text"],
+Cell[18932, 622, 179, 3, 108, "Input"],
+
+Cell[CellGroupData[{
+Cell[19136, 629, 134, 2, 85, "Input"],
+Cell[19273, 633, 143, 4, 58, "Output"]
+}, Open  ]],
+Cell[19431, 640, 97, 3, 46, "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[19565, 648, 39, 0, 60, "Subsubsection"],
+Cell[19607, 650, 351, 10, 71, "Text"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+
+
+
+(***********************************************************************
+End of Mathematica Notebook file.
+***********************************************************************)
+
